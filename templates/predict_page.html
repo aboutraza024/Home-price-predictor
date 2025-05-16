@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Home Price Prediction</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .profile-bar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      padding: 20px;
+      display: flex;
+      justify-content: flex-end;
+      z-index: 1000;
+    }
+
+    .profile-button {
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      border-radius: 30px;
+      padding: 10px 20px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #2d3748;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease-in-out;
+    }
+
+    .profile-button:hover {
+      background: #edf2f7;
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body style="font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80'); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; line-height: 1.6;">
+
+  <!-- Profile Bar -->
+  <div class="profile-bar">
+    <button class="profile-button" onclick="window.location.href='#'">Profile</button>
+  </div>
+
+  <div style="width: 100%; max-width: 600px;">
+    <div style="background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); backdrop-filter: blur(10px); margin-top: 60px;">
+      <h1 style="color: #2d3748; font-size: 2.2rem; margin-bottom: 8px; text-align: center;">Home Price Prediction</h1>
+      <p style="color: #718096; text-align: center; margin-bottom: 30px;">Find the estimated value of your dream home</p>
+
+      <form style="display: flex; flex-direction: column; gap: 20px;">
+        <!-- Sector -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label for="sector" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Sector</label>
+          <input type="text" id="sector" placeholder="Enter sector (e.g., F-7)" required style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9);">
+        </div>
+
+        <!-- Sub-sector -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label for="subsector" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Sub-sector</label>
+          <input type="text" id="subsector" placeholder="Enter sub-sector (e.g., F-7/2)" required style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9);">
+        </div>
+
+        <!-- Square Feet -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label for="square-feet" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Square Feet</label>
+          <input type="number" id="square-feet" placeholder="Enter total square feet" required style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9);">
+        </div>
+
+        <!-- Bedrooms & Washrooms -->
+        <div style="display: flex; gap: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+            <label for="bedrooms" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Bedrooms</label>
+            <input type="number" id="bedrooms" placeholder="Number of bedrooms" required style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9);">
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+            <label for="washrooms" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Washrooms</label>
+            <input type="number" id="washrooms" placeholder="Number of washrooms" required style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9);">
+          </div>
+        </div>
+
+        <!-- Kitchen -->
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label for="kitchen" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Kitchen</label>
+          <input type="number" id="kitchen" placeholder="Number of kitchens" required style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9);">
+        </div>
+
+        <!-- Submit -->
+        <button type="submit"
+          style="background: linear-gradient(135deg, #4299e1 0%, #667eea 100%); color: white; padding: 14px 28px; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; margin-top: 10px;"
+          onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(66, 153, 225, 0.2)'"
+          onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          Calculate Price
+        </button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Code - HomePricePredictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #3b82f6;
+        }
+        
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .auth-container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 600px;
+            background-color: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-left {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .auth-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+        
+        .auth-logo img {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .auth-logo h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        
+        .auth-form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .auth-form-container h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+        
+        .auth-subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+        
+        .auth-form {
+            margin-bottom: 20px;
+        }
+        
+        .verification-code-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .verification-input {
+            width: 50px;
+            height: 60px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 24px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .verification-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .resend-code {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .countdown {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #6b7280;
+        }
+        
+        .auth-right {
+            flex: 1;
+            background-image: url('https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .auth-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(30, 58, 138, 0.8), rgba(37, 99, 235, 0.7));
+        }
+        
+        .auth-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 0 40px;
+        }
+        
+        .auth-content h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .auth-content p {
+            font-size: 18px;
+        }
+        
+        @media (max-width: 992px) {
+            .auth-container {
+                flex-direction: column;
+            }
+            
+            .auth-right {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .verification-input {
+                width: 40px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .auth-left {
+                padding: 20px;
+            }
+            
+            .auth-form-container h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-container">
+            <div class="auth-left">
+                <div class="auth-logo">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1040/1040993.png" alt="House Icon">
+                    <h1>HomePricePredictor</h1>
+                </div>
+                <div class="auth-form-container">
+                    <h2>Verification Code</h2>
+                    <p class="auth-subtitle">Enter the 6-digit code sent to your email</p>
+                    
+                    <form class="auth-form">
+                        <div class="verification-code-container">
+                            <input type="text" maxlength="1" class="verification-input" required>
+                            <input type="text" maxlength="1" class="verification-input" required>
+                            <input type="text" maxlength="1" class="verification-input" required>
+                            <input type="text" maxlength="1" class="verification-input" required>
+                            <input type="text" maxlength="1" class="verification-input" required>
+                            <input type="text" maxlength="1" class="verification-input" required>
+                        </div>
+                        
+                        <div class="resend-code">
+                            <p>Didn't receive a code? <a href="#">Resend</a></p>
+                            <p class="countdown">Resend in: <span id="timer">01:30</span></p>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-block">Verify</button>
+                    </form>
+                    
+                    <div class="auth-footer">
+                        <p><a href="login.html">Back to login</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-right">
+                <div class="auth-image-overlay"></div>
+                <div class="auth-content">
+                    <h2>Almost There!</h2>
+                    <p>Verify your account to access all features</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
