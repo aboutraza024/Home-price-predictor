@@ -16,8 +16,8 @@ fixed_subject = "Verification Code"
 
 
 # Function to send email
-async def send_email1(user_email,verification_code):
-    fixed_message = f"Your 5 digit Verification code: {verification_code}"
+async def send_verification_code(user_email,verification_code):
+    fixed_message = f"Your 6 digit Verification code: {verification_code}"
     smtp_server = "smtp.gmail.com"
     smtp_port = 587  # TLS port for Gmail
     msg = MIMEMultipart()

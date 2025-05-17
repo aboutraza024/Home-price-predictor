@@ -6,6 +6,66 @@
     <title>Verification Code - HomePricePredictor</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+    .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease-in-out;
+
+}
+
+.popup-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+        .input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    height: 50px;
+    padding: 0 15px;
+    font-size: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
         * {
             margin: 0;
             padding: 0;
@@ -232,24 +292,24 @@
                     <h2>Verification Code</h2>
                     <p class="auth-subtitle">Enter the 6-digit code sent to your email</p>
                     
-                    <form class="auth-form">
-                        <div class="verification-code-container">
-                            <input type="text" maxlength="1" class="verification-input" required>
-                            <input type="text" maxlength="1" class="verification-input" required>
-                            <input type="text" maxlength="1" class="verification-input" required>
-                            <input type="text" maxlength="1" class="verification-input" required>
-                            <input type="text" maxlength="1" class="verification-input" required>
-                            <input type="text" maxlength="1" class="verification-input" required>
-                        </div>
-                        
-                        <div class="resend-code">
-                            <p>Didn't receive a code? <a href="#">Resend</a></p>
-                            <p class="countdown">Resend in: <span id="timer">01:30</span></p>
-                        </div>
-                        
+                    <form class="auth-form" method="post" action="/verification">
+                        <div class="input-group">
+    <label for="vcode1">Verification Code</label>
+    <input type="text" id="vcode1" name="vcode1" placeholder="Enter 6-digit code" required>
+</div>
                         <button type="submit" class="btn btn-primary btn-block">Verify</button>
                     </form>
-                    
+                    {% if message %}
+<div id="popup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>Account Created Successfully</h2>
+        <p>Login Your Account and Start </p>
+        <button onclick="closePopup()" class="btn btn-primary">OK</button>
+    </div>
+</div>
+{% endif %}
+
                     <div class="auth-footer">
                         <p><a href="login.html">Back to login</a></p>
                     </div>
@@ -266,3 +326,11 @@
     </div>
 </body>
 </html>
+<script>
+function closePopup() {
+    var popup = document.getElementById('popup');
+    if (popup) {
+        popup.style.display = 'none';
+    }
+}
+</script>
