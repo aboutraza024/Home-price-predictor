@@ -99,6 +99,18 @@ def verify_code(request: Request,backgroundtask:BackgroundTasks, vcode1: str = F
         create_user(db=db, email=email,first_name=first_name,last_name=last_name,password=password)
     return templates.TemplateResponse("verification.html", {"request": request,"message":message})
 
+@app.post("/login")
+def login_user(request: Request, user: LoginUser = Depends(LoginUser.as_form), db: Session = Depends(get_db)):
+    print("HELLO ",user.email)
+    mail = get_user_by_email(db, email=user.email)
+    print(mail)
+    if not mail or mail.password != user.password:
+        message=True
+        return templates.TemplateResponse("login.html", {"request": request,
+                                                                "message": message})
+    return templates.TemplateResponse("predict_page.html", {"request": request,
+                                                        "message": "User logged in successfully!"})
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
