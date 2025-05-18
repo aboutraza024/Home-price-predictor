@@ -310,6 +310,28 @@
 </div>
 {% endif %}
 
+{% if message2 %}
+<div id="popup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>Login Again</h2>
+        <p>Password Updated Successfully</p>
+        <button onclick="closePopup()" class="btn btn-primary">OK</button>
+    </div>
+</div>
+{% endif %}
+
+{% if message3 %}
+<div id="popup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>OOPS</h2>
+        <p>Incorrect Verification Code</p>
+        <button onclick="closePopup()" class="btn btn-primary">OK</button>
+    </div>
+</div>
+{% endif %}
+
                     <div class="auth-footer">
                         <p><a href="login.html">Back to login</a></p>
                     </div>
