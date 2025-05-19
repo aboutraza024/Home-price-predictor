@@ -5,6 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Home Price Prediction</title>
   <style>
+  .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease-in-out;
+
+}
+
+.popup-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
     select,
     textarea {
       padding: 12px 16px;
@@ -68,7 +99,49 @@
     <div style="background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); backdrop-filter: blur(10px); margin-top: 60px;">
       <h1 style="color: #2d3748; font-size: 2.2rem; margin-bottom: 8px; text-align: center;">Home Price Prediction</h1>
       <p style="color: #718096; text-align: center; margin-bottom: 30px;">Find the estimated value of your dream home</p>
+{% if message6 %}
+<div id="popup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>USER ALREADY REGISTERED</h2>
+        <p>USING THIS GITHUB ACCOUNT</p>
+        <button onclick="closePopup()" class="btn btn-primary">OK</button>
+    </div>
+</div>
+{% endif %}
 
+{% if message4 %}
+<div id="popup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>USER ALREADY REGISTERED</h2>
+        <p>USING THIS GOOGLE ACCOUNT</p>
+        <button onclick="closePopup()" class="btn btn-primary">OK</button>
+    </div>
+</div>
+{% endif %}
+
+{% if message5 %}
+<div id="popup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>USER REGISTERED SUCCESSFULLY</h2>
+        <p>WITH THIS GOOGLE ACCOUNT</p>
+        <button onclick="closePopup()" class="btn btn-primary">OK</button>
+    </div>
+</div>
+{% endif %}
+
+{% if message7 %}
+<div id="popup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>USER REGISTERED SUCCESSFULLY</h2>
+        <p>WITH THIS GITHUB ACCOUNT</p>
+        <button onclick="closePopup()" class="btn btn-primary">OK</button>
+    </div>
+</div>
+{% endif %}
       <form style="display: flex; flex-direction: column; gap: 20px;">
         <!-- Purpose -->
         <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -80,7 +153,7 @@
             <option value="rent">Rent</option>
           </select>
         </div>
-
+        
         <!-- Sector -->
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <label for="sector" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Enter Location</label>
@@ -137,7 +210,7 @@
           <textarea id="description" name="description" placeholder="Enter property description here..." required
             style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); resize: vertical; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100px;"></textarea>
         </div>
-
+        
         <!-- Submit -->
         <button type="submit"
           style="background: linear-gradient(135deg, #4299e1 0%, #667eea 100%); color: white; padding: 14px 28px; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; margin-top: 10px;"
@@ -150,3 +223,12 @@
   </div>
 </body>
 </html>
+<script>
+function closePopup() {
+    var popup = document.getElementById('popup');
+    if (popup) {
+        popup.style.display = 'none';
+    }
+}
+
+</script>

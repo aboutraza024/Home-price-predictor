@@ -232,13 +232,14 @@ async def github_code(code: str, request: Request, db: Session = Depends(get_db)
                 return templates.TemplateResponse(
                     "predict_page.html", {"request": request, "message6": message6}
                 )
-
+            if name is None:
+                name="NOT MENTIONED"
             # Create new user if not found
             new_user = create_user_with_github(db, name, github_id)
             print(f"New user created: {new_user}")
             message7 = True
             return templates.TemplateResponse(
-                "register.html", {"request": request, "message7": message7}
+                "predict_page.html", {"request": request, "message7": message7}
             )
 
     except Exception as e:
@@ -281,32 +282,39 @@ async def auth(request: Request, db: Session = Depends(get_db)):
         return templates.TemplateResponse(
             "error.html", context={"request": request, "error": e.error}  # update this with error
         )
-    return templates.TemplateResponse("register.html", context={"request": request, "message5": message5})
+    return templates.TemplateResponse("predict_page.html", context={"request": request, "message5": message5})
 
 
 @app.get("/profile", response_class=HTMLResponse)
 def gen_response(request: Request, db: Session = Depends(get_db)):
+    name=None
+    email=None
     email = request.session.get("user_email")
     email_with_google = request.session.get("user_email_with_google")
     name_with_google = request.session.get("user_name_with_google")
-
     email_with_github = request.session.get("user_email_with_github")
     name_with_github = request.session.get("user_name_with_github")
-    if email_with_google:
-        print("GOOGLE")
-        name = name_with_google
-        email = email_with_google
-    elif name_with_github:
-        print("GITHUB")
-        name = name_with_github
-        email = email_with_github
-    else:
-        print(email)
-        user_info = get_user_by_email(db, email)
-        print(user_info)
-        fname = user_info.first_name
-        lname = user_info.last_name
-        name = f"{fname} {lname}"
+    try:
+        if email_with_google:
+            print("GOOGLE")
+            name = name_with_google
+            email = email_with_google
+        elif email_with_github:
+            print("GITHUB")
+            name = name_with_github
+            if name is None:
+                name="NOT MENTIONED"
+            email = email_with_github
+            print("hello",name,email)
+        else:
+            print(email)
+            user_info = get_user_by_email(db, email)
+            print(user_info)
+            fname = user_info.first_name
+            lname = user_info.last_name
+            name = f"{fname} {lname}"
+    except Exception as e:
+        print("ERROR",e)
     return templates.TemplateResponse("profile_settings.html", {"request": request, "email": email, "name": name})
 
 
@@ -336,6 +344,12 @@ def gen_response(request: Request, db: Session = Depends(get_db), password: str 
     return templates.TemplateResponse("profile_settings.html",
                                       {"request": request})  # del this is temp
 
+
+@app.get("/logout")
+def logout(request: Request):
+    # Remove the user from the session or reset the session
+    request.session.clear()
+    return RedirectResponse(url="/login")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8002)
