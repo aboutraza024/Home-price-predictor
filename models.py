@@ -1,11 +1,12 @@
 import uvicorn
 from pydantic import BaseModel
-from fastapi import FastAPI, Form, Depends, HTTPException, Request, BackgroundTasks,File,UploadFile
+from fastapi import FastAPI, Form, Depends, HTTPException, Request, BackgroundTasks, File, UploadFile
 from sqlalchemy.orm import Session, sessionmaker, declarative_base
 from sqlalchemy import create_engine, Integer, String, Column
 import random
 
 from starlette.middleware.sessions import SessionMiddleware
+
 # SQLAlchemy Database Models
 
 
@@ -26,17 +27,20 @@ class Register_With_Email(Base):
     last_name = Column(String(100), index=True)
     password = Column(String(100), index=True)
 
+
 class Register_With_Google(Base):
     __tablename__ = "register_with_google"
-    id = Column(Integer, primary_key=True, autoincrement=True,index=True)
-    email = Column(String(100), unique=True, nullable=False,index=True)
-    username = Column(String(100), nullable=False,index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    email = Column(String(100), unique=True, nullable=False, index=True)
+    username = Column(String(100), nullable=False, index=True)
+
 
 class Register_With_Github(Base):
     __tablename__ = "register_with_github"
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     user_id = Column(Integer, nullable=False, index=True)
     name = Column(String(100), nullable=False, index=True)
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -68,24 +72,47 @@ class LoginUser(BaseModel):
         return cls(email=email, password=password)
 
 
+class PredictHouse(BaseModel):
+    Purpose: str
+    home: str
+    Location: str
+    Size: float
+    Parking: int
+    Bedrooms: int
+    Washrooms: int
+    Built_in_Year: int
+    Description: str
+
+    @classmethod
+    def as_form(cls, Purpose: str = Form(...), home: str = Form(...),
+                Location: str = Form(...), Size: float = Form(...), Parking: int = Form(...),
+                Bedrooms: int = Form(...),
+                Washrooms: int = Form(...), Built_in_Year: int = Form(...),
+                Description: str = Form(...)) -> "PredictHouse":
+        return cls(Purpose=Purpose, home=home, Location=Location, Size=Size, Parking=Parking, Bedrooms=Bedrooms,
+                   Washrooms=Washrooms, Built_in_Year=Built_in_Year, Description=Description)
+
+
 # Database helper functions
-def create_user(db: Session,email:str,first_name:str,last_name:str,password:str ):
+def create_user(db: Session, email: str, first_name: str, last_name: str, password: str):
     db_user = Register_With_Email(email=email, first_name=first_name, last_name=last_name,
-                       password=password)
+                                  password=password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
 
-def create_user_with_google(db:Session,email:str,user_name:str):
-    db_user1=Register_With_Google(email=email,username=user_name)
+
+def create_user_with_google(db: Session, email: str, user_name: str):
+    db_user1 = Register_With_Google(email=email, username=user_name)
     db.add(db_user1)
     db.commit()
     db.refresh(db_user1)
     return db_user1
 
-def create_user_with_github(db:Session,name:str,user_id:int):
-    db_user2=Register_With_Github(name=name,user_id=user_id)
+
+def create_user_with_github(db: Session, name: str, user_id: int):
+    db_user2 = Register_With_Github(name=name, user_id=user_id)
     db.add(db_user2)
     db.commit()
     db.refresh(db_user2)
@@ -95,10 +122,10 @@ def create_user_with_github(db:Session,name:str,user_id:int):
 def get_user_by_email_google(db: Session, email: str):
     return db.query(Register_With_Google).filter(Register_With_Google.email == email).first()
 
-def get_user_by_github(db:Session,user_id):
-    return db.query(Register_With_Github).filter(Register_With_Github.user_id==user_id).first()
+
+def get_user_by_github(db: Session, user_id):
+    return db.query(Register_With_Github).filter(Register_With_Github.user_id == user_id).first()
 
 
 def get_user_by_email(db: Session, email: str):
     return db.query(Register_With_Email).filter(Register_With_Email.email == email).first()
-

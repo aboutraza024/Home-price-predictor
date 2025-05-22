@@ -327,7 +327,7 @@
         <span class="popup-close" onclick="closePopup()">&times;</span>
         <h2>Try Again</h2>
         <p>BOTH Password Incorrect</p>
-        <button onclick="closePopup()" class="btn btn-primary">OK</button>
+        
     </div>
 </div>
 {% endif %}
@@ -339,10 +339,33 @@
         <span class="popup-close" onclick="closePopup()">&times;</span>
         <h2>Password Updated</h2>
         
-        <button onclick="closePopup()" class="btn btn-primary">OK</button>
+        
     </div>
 </div>
 {% endif %}
+{% if message3 %}
+<div id="popup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>USER REGISTERED WITH GITUHB ACCOUNT</h2>
+        
+        
+    </div>
+</div>
+{% endif %}
+
+
+{% if message4 %}
+<div id="popup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>USER REGISTERED WITH GOOGLE ACCOUNT</h2>
+        
+        
+    </div>
+</div>
+{% endif %}
+
     <label for="confirmNewPassword">Confirm New Password</label>
     <div class="input-group">
       <input type="password" id="confirmNewPassword" name="newpassword" placeholder="Confirm your new password" />
@@ -356,11 +379,7 @@
 
         </div>
         <div class="my-6 text-center">
-  <form action="/logout" method="get">
-  <button type="submit" class="btn-outline full-width-btn">
-    <span class="icon-placeholder"><i class="fas fa-sign-out-alt"></i></span> Logout
-  </button>
-</form>
+  
 
 </div>
       </div>

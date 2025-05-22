@@ -1,8 +1,10 @@
 import os
 from dotenv import load_dotenv
+from pyexpat.errors import messages
+
 from models import get_user_by_email, get_user_by_email_google, get_user_by_github, create_user_with_github, \
     create_user_with_google, create_user
-from models import UserCreate, LoginUser, Register_With_Google, Register_With_Github, Register_With_Email
+from models import UserCreate, LoginUser, Register_With_Google, Register_With_Github, Register_With_Email,PredictHouse
 from auth import send_verification_code
 from models import app, SessionLocal
 import uvicorn
@@ -140,14 +142,21 @@ def login_user(request: Request, user: LoginUser = Depends(LoginUser.as_form), d
     request.session.pop("user_name_with_github", None)
     request.session["user_email"] = user.email
     mail = get_user_by_email(db, email=user.email)
-    print(mail.email)
-    print(mail.password)
-    if not mail or mail.password != user.password:
+    print(mail)
+    if not mail:
+        message1 = True
+        return templates.TemplateResponse("login.html", {"request": request,
+                                                         "message1": message1})
+
+    if mail.password != user.password:
         message = True
         return templates.TemplateResponse("login.html", {"request": request,
                                                          "message": message})
+
     return templates.TemplateResponse("predict_page.html", {"request": request,
-                                                            "message": "User logged in successfully!"})
+                                                        "message": "User logged in successfully!"})
+
+
 
 
 @app.get("/forget", response_class=HTMLResponse)
@@ -233,7 +242,7 @@ async def github_code(code: str, request: Request, db: Session = Depends(get_db)
                     "predict_page.html", {"request": request, "message6": message6}
                 )
             if name is None:
-                name="NOT MENTIONED"
+                name = "NOT MENTIONED"
             # Create new user if not found
             new_user = create_user_with_github(db, name, github_id)
             print(f"New user created: {new_user}")
@@ -287,8 +296,8 @@ async def auth(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/profile", response_class=HTMLResponse)
 def gen_response(request: Request, db: Session = Depends(get_db)):
-    name=None
-    email=None
+    name = None
+    email = None
     email = request.session.get("user_email")
     email_with_google = request.session.get("user_email_with_google")
     name_with_google = request.session.get("user_name_with_google")
@@ -303,9 +312,9 @@ def gen_response(request: Request, db: Session = Depends(get_db)):
             print("GITHUB")
             name = name_with_github
             if name is None:
-                name="NOT MENTIONED"
+                name = "NOT MENTIONED"
             email = email_with_github
-            print("hello",name,email)
+            print("hello", name, email)
         else:
             print(email)
             user_info = get_user_by_email(db, email)
@@ -314,42 +323,73 @@ def gen_response(request: Request, db: Session = Depends(get_db)):
             lname = user_info.last_name
             name = f"{fname} {lname}"
     except Exception as e:
-        print("ERROR",e)
+        print("ERROR", e)
     return templates.TemplateResponse("profile_settings.html", {"request": request, "email": email, "name": name})
 
 
 @app.post("/profile", response_class=HTMLResponse)
 def gen_response(request: Request, db: Session = Depends(get_db), password: str = Form(...),
                  newpassword: str = Form(...)):
-    # email = request.session.get("user_email")
-    # user_info = get_user_by_email(db, email)
-    # fname = user_info.first_name
-    # lname = user_info.last_name
-    # name = f"{fname} {lname}"
-    # print(password,newpassword)
-    # if password != newpassword:
-    #     message1 = True
-    #     return templates.TemplateResponse("profile_settings.html", {"request": request, "message1": message1,"email":email,"name":name})
-    # # user_info = db.query(Register_With_Email).filter(Register_With_Email.email == email).first()  # Fetch the user instance
-    # if password == newpassword:
-    #     if user_info:
-    #         user_info.password = newpassword
-    #         db.commit()
-    #         db.refresh(user_info)
-    #         message2 = True
-    #         return templates.TemplateResponse("profile_settings.html", {"request": request,"message2":message2,"email":email,"name":name})
-    # return templates.TemplateResponse("profile_settings.html",
-    #                                   {"request": request,"email": email, "name": name})
+    email = request.session.get("user_email")
+    if email:
+        user_info = get_user_by_email(db, email)
 
-    return templates.TemplateResponse("profile_settings.html",
-                                      {"request": request})  # del this is temp
+        fname = user_info.first_name
+        lname = user_info.last_name
+        name = f"{fname} {lname}"
+        print(password, newpassword)
+        if password != newpassword:
+            message1 = True
+            return templates.TemplateResponse("profile_settings.html",
+                                              {"request": request, "message1": message1, "email": email, "name": name})
+        # user_info = db.query(Register_With_Email).filter(Register_With_Email.email == email).first()  # Fetch the user instance
+        if password == newpassword:
+            if user_info:
+                user_info = get_user_by_email(db, email)
+                user_info.password = newpassword
+                db.commit()
+                db.refresh(user_info)
+                message2 = True
+                return templates.TemplateResponse("profile_settings.html",
+                                                  {"request": request, "message2": message2, "email": email,
+                                                   "name": name})
+
+        return templates.TemplateResponse("profile_settings.html",
+                                      {"request": request, "email": email, "name": name})
+
+    email = request.session.get("user_email_with_google")
+    name = request.session.get("user_name_with_google")
+    email_with_github = request.session.get("user_email_with_github")
+    name2 = request.session.get("user_name_with_github")
+    if name:
+        message4=True
+        return templates.TemplateResponse("profile_settings.html",
+                                      {"request": request, "email": email, "name": name,"message4":message4})
+    if name2:
+        email=email_with_github
+        name=name2
+        message3=True
+        return templates.TemplateResponse("profile_settings.html",
+                                      {"request": request, "email": email, "name": name,"message3":message3})
 
 
-@app.get("/logout")
+
+
+
+
+
+@app.post("/predict", response_class=HTMLResponse)
+def get_form_data1(request: Request,Predict: PredictHouse = Depends(PredictHouse.as_form)):
+    print("hello predict",Predict)
+    return templates.TemplateResponse("predict_page.html", {"request": request})
+
+
+@app.get("/logout", response_class=HTMLResponse)
 def logout(request: Request):
     # Remove the user from the session or reset the session
     request.session.clear()
     return RedirectResponse(url="/login")
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8002)

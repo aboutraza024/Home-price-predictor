@@ -377,6 +377,17 @@
 </div>
 {% endif %}
 
+{% if message1 %}
+<div id="popup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>Incorrect Email</h2>
+        <p>Email Not Registered</p>
+        <button onclick="closePopup()" class="btn btn-primary">OK</button>
+    </div>
+</div>
+{% endif %}
+
                 <div class="auth-divider">
                         <span>OR</span>
 <!-- GOOGLE LOGIN FORM -->

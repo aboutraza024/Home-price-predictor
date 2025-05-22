@@ -91,7 +91,13 @@
 <body style="font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80'); background-size: cover; background-position: center; background-attachment: fixed; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; line-height: 1.6;">
 
   <!-- Profile Bar -->
+   
   <div class="profile-bar">
+    <form action="/logout" method="get" style="margin-right: 15px;">
+  <button type="submit" class="profile-button">
+    <span class="icon-placeholder"><i class="fas fa-sign-out-alt"></i></span> Logout
+  </button>
+</form>
     <button class="profile-button" onclick="window.location.href='/profile'">Profile</button>
   </div>
 
@@ -142,36 +148,44 @@
     </div>
 </div>
 {% endif %}
-      <form style="display: flex; flex-direction: column; gap: 20px;">
+      <form style="display: flex; flex-direction: column; gap: 20px;" method="post" action="/predict">
         <!-- Purpose -->
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <label for="purpose" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Purpose</label>
-          <select id="purpose" name="purpose" required
+          <select id="purpose" name="Purpose" required
             style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
             <option value="" disabled selected>Select Purpose</option>
             <option value="buy">Buy</option>
             <option value="rent">Rent</option>
           </select>
         </div>
-        
+        <div style="display: flex;">
+          <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+            <label for="bedrooms" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">House Type</label>
+            <input type="text" id="home" name="home" placeholder="House/Flat/Farm House" required
+              style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+              
+            </div>
+          </div>
+          
         <!-- Sector -->
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <label for="sector" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Enter Location</label>
-          <input type="text" id="sector" placeholder="Enter Location" required
+          <input type="text" id="sector" name="Location" placeholder="Enter Location" required
             style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         </div>
 
         <!-- Sub-sector -->
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <label for="subsector" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Enter Size in Marla</label>
-          <input type="text" id="subsector" placeholder="Enter Size in Marla" required
+          <input type="text" id="subsector" name="Size" placeholder="Enter Size in Sq Feet" required
             style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         </div>
 
         <!-- Square Feet -->
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <label for="square-feet" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Parking Spaces</label>
-          <input type="number" id="square-feet" placeholder="Parking Spaces" required
+          <input type="number" id="square-feet" name="Parking" placeholder="Parking Spaces" required
             style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         </div>
 
@@ -179,35 +193,29 @@
         <div style="display: flex; gap: 20px;">
           <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
             <label for="bedrooms" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Bedrooms</label>
-            <input type="number" id="bedrooms" placeholder="Number of bedrooms" required
+            <input type="number" id="bedrooms" name="Bedrooms" placeholder="Number of bedrooms" required
               style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
             <label for="washrooms" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Washrooms</label>
-            <input type="number" id="washrooms" placeholder="Number of washrooms" required
+            <input type="number" id="washrooms" name="Washrooms" placeholder="Number of washrooms" required
               style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
           </div>
         </div>
 
-        <!-- Kitchen -->
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label for="kitchen" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Kitchen</label>
-          <input type="number" id="kitchen" placeholder="Number of kitchens" required
-            style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-        </div>
 
         <!-- Built-in Year -->
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <label for="built_in_year" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Built-in Year</label>
-          <input type="number" id="built_in_year" name="built_in_year" placeholder="Enter built-in year" required min="1900" max="2100"
+          <input type="number" id="built_in_year" name="Built_in_Year" name="built_in_year" placeholder="Enter built-in year" required min="1900" max="2100"
             style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         </div>
 
         <!-- Description -->
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <label for="description" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Description</label>
-          <textarea id="description" name="description" placeholder="Enter property description here..." required
+          <textarea id="description"  name="Description" placeholder="Enter property description here..." required
             style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); resize: vertical; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100px;"></textarea>
         </div>
         
