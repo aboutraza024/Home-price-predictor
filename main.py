@@ -1,10 +1,13 @@
 import os
+import joblib
+import pandas as pd
+import pandas as pd
 from dotenv import load_dotenv
 from pyexpat.errors import messages
 
 from models import get_user_by_email, get_user_by_email_google, get_user_by_github, create_user_with_github, \
     create_user_with_google, create_user
-from models import UserCreate, LoginUser, Register_With_Google, Register_With_Github, Register_With_Email,PredictHouse
+from models import UserCreate, LoginUser, Register_With_Google, Register_With_Github, Register_With_Email, PredictHouse
 from auth import send_verification_code
 from models import app, SessionLocal
 import uvicorn
@@ -19,10 +22,11 @@ import httpx
 import io
 from starlette.middleware.sessions import SessionMiddleware
 from authlib.integrations.starlette_client import OAuth, OAuthError
-
+# Load model
+model = joblib.load('house_price_model.pkl')
 get_email = {}
 get_email_forget = {}
-
+data = {}
 load_dotenv()
 github_client_id = os.getenv("github_client_id1")
 github_client_secret = os.getenv("github_client_secret1")
@@ -154,9 +158,7 @@ def login_user(request: Request, user: LoginUser = Depends(LoginUser.as_form), d
                                                          "message": message})
 
     return templates.TemplateResponse("predict_page.html", {"request": request,
-                                                        "message": "User logged in successfully!"})
-
-
+                                                            "message": "User logged in successfully!"})
 
 
 @app.get("/forget", response_class=HTMLResponse)
@@ -355,33 +357,47 @@ def gen_response(request: Request, db: Session = Depends(get_db), password: str 
                                                    "name": name})
 
         return templates.TemplateResponse("profile_settings.html",
-                                      {"request": request, "email": email, "name": name})
+                                          {"request": request, "email": email, "name": name})
 
     email = request.session.get("user_email_with_google")
     name = request.session.get("user_name_with_google")
     email_with_github = request.session.get("user_email_with_github")
     name2 = request.session.get("user_name_with_github")
     if name:
-        message4=True
+        message4 = True
         return templates.TemplateResponse("profile_settings.html",
-                                      {"request": request, "email": email, "name": name,"message4":message4})
+                                          {"request": request, "email": email, "name": name, "message4": message4})
     if name2:
-        email=email_with_github
-        name=name2
-        message3=True
+        email = email_with_github
+        name = name2
+        message3 = True
         return templates.TemplateResponse("profile_settings.html",
-                                      {"request": request, "email": email, "name": name,"message3":message3})
-
-
-
-
-
+                                          {"request": request, "email": email, "name": name, "message3": message3})
 
 
 @app.post("/predict", response_class=HTMLResponse)
-def get_form_data1(request: Request,Predict: PredictHouse = Depends(PredictHouse.as_form)):
-    print("hello predict",Predict)
-    return templates.TemplateResponse("predict_page.html", {"request": request})
+def get_form_data1(request: Request, Predict: PredictHouse = Depends(PredictHouse.as_form)):
+    print("hello predict", Predict.Purpose)
+
+    data["TYPE"] = Predict.home
+    data["PURPOSE"] = Predict.Purpose
+    data["LOCATION"] = Predict.Location
+    data["AREA"] = Predict.Size
+    data["PARKING SPACES"] = Predict.Parking
+    data["BEDROOMS"] = Predict.Bedrooms
+    data["BATHROOMS"] = Predict.Washrooms
+    data["BUILD IN YEAR"] = Predict.Built_in_Year
+    if 'rent' in Predict.Purpose.lower():
+        data["is_rent"] = 1
+    else:
+        data["is_rent"] = 0
+
+    new_data = pd.DataFrame([data])
+    print(new_data)
+    print(data)
+    predicted_price = model.predict(new_data)
+    print(predicted_price)
+    return templates.TemplateResponse("predict_page.html", {"request": request,"predicted_price":predicted_price})
 
 
 @app.get("/logout", response_class=HTMLResponse)
