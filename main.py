@@ -1,29 +1,24 @@
 import os
 import joblib
-import pandas as pd
+from passlib.context import CryptContext
 import pandas as pd
 from dotenv import load_dotenv
-from pyexpat.errors import messages
-
 from models import get_user_by_email, get_user_by_email_google, get_user_by_github, create_user_with_github, \
     create_user_with_google, create_user
-from models import UserCreate, LoginUser, Register_With_Google, Register_With_Github, Register_With_Email, PredictHouse
+from models import UserCreate, LoginUser, Register_With_Email, PredictHouse
 from auth import send_verification_code
 from models import app, SessionLocal
 import uvicorn
-from fastapi import FastAPI, Form, Depends, HTTPException, Request, BackgroundTasks, File, UploadFile
-from sqlalchemy.orm import Session, sessionmaker, declarative_base
-from sqlalchemy import create_engine, Integer, String, Column
+from fastapi import FastAPI, Form, Depends, Request, BackgroundTasks
+from sqlalchemy.orm import Session
 import random
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
 import httpx
-import io
-from starlette.middleware.sessions import SessionMiddleware
 from authlib.integrations.starlette_client import OAuth, OAuthError
-# Load model
+
 model = joblib.load('house_price_model.pkl')
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 get_email = {}
 get_email_forget = {}
 data = {}
@@ -46,8 +41,13 @@ oauth.register(
 def v_code():
     return random.randint(100000, 999999)
 
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
 
-verification_code = v_code()  # check every one get unique code
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
+
+verification_code = v_code()
 
 
 def get_db():
@@ -60,8 +60,6 @@ def get_db():
 
 templates = Jinja2Templates(directory="templates")
 
-
-# app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -90,7 +88,8 @@ def reg_user(request: Request, backgroundtask: BackgroundTasks, user: UserCreate
     get_email["f_name"] = user.first_name
     get_email["l_name"] = user.last_name
     get_email["email"] = user.email
-    get_email["password"] = user.password
+    hashed_passowrd=hash_password(user.password)
+    get_email["password"] = hashed_passowrd
     print("Hello", user)
     existing_user = get_user_by_email(db, email=user.email)
     if existing_user:
@@ -152,7 +151,10 @@ def login_user(request: Request, user: LoginUser = Depends(LoginUser.as_form), d
         return templates.TemplateResponse("login.html", {"request": request,
                                                          "message1": message1})
 
-    if mail.password != user.password:
+
+
+    verify=verify_password(user.password,mail.password)
+    if not verify:
         message = True
         return templates.TemplateResponse("login.html", {"request": request,
                                                          "message": message})
@@ -175,7 +177,7 @@ def gen_response(request: Request, backgroundtask: BackgroundTasks, email: str =
         return templates.TemplateResponse("forgetpassword.html", {"request": request, "message1": message1})
     backgroundtask.add_task(send_verification_code, email, verification_code)
     get_email_forget["email"] = email
-    get_email_forget["newpassword"] = newpassword
+    get_email_forget["newpassword"] = hash_password(password)
     return RedirectResponse(url="/verification", status_code=303)
 
 
@@ -348,7 +350,7 @@ def gen_response(request: Request, db: Session = Depends(get_db), password: str 
         if password == newpassword:
             if user_info:
                 user_info = get_user_by_email(db, email)
-                user_info.password = newpassword
+                user_info.password = hash_password(newpassword)
                 db.commit()
                 db.refresh(user_info)
                 message2 = True
