@@ -81,16 +81,16 @@ class PredictHouse(BaseModel):
     Bedrooms: int
     Washrooms: int
     Built_in_Year: int
-    Description: str
+
 
     @classmethod
     def as_form(cls, Purpose: str = Form(...), home: str = Form(...),
                 Location: str = Form(...), Size: float = Form(...), Parking: int = Form(...),
                 Bedrooms: int = Form(...),
                 Washrooms: int = Form(...), Built_in_Year: int = Form(...),
-                Description: str = Form(...)) -> "PredictHouse":
+                ) -> "PredictHouse":
         return cls(Purpose=Purpose, home=home, Location=Location, Size=Size, Parking=Parking, Bedrooms=Bedrooms,
-                   Washrooms=Washrooms, Built_in_Year=Built_in_Year, Description=Description)
+                   Washrooms=Washrooms, Built_in_Year=Built_in_Year)
 
 
 # Database helper functions

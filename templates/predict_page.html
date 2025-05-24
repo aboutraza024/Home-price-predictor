@@ -148,6 +148,16 @@
     </div>
 </div>
 {% endif %}
+
+{% if predicted_price %}
+<div id="popup" class="popup-overlay">
+    <div class="popup-content">
+        <span class="popup-close" onclick="closePopup()">&times;</span>
+        <h2>Predicted Price is: {{ predicted_price }} </h2>
+        
+    </div>
+</div>
+{% endif %}
       <form style="display: flex; flex-direction: column; gap: 20px;" method="post" action="/predict">
         <!-- Purpose -->
         <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -155,8 +165,8 @@
           <select id="purpose" name="Purpose" required
             style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
             <option value="" disabled selected>Select Purpose</option>
-            <option value="buy">Buy</option>
-            <option value="rent">Rent</option>
+            <option value="For Sale">Buy</option>
+            <option value="For Rent">Rent</option>
           </select>
         </div>
         <div style="display: flex;">
@@ -212,12 +222,13 @@
             style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         </div>
 
-        <!-- Description -->
+        <!-- Description 
         <div style="display: flex; flex-direction: column; gap: 8px;">
           <label for="description" style="color: #4a5568; font-weight: 500; font-size: 0.95rem;">Description</label>
           <textarea id="description"  name="Description" placeholder="Enter property description here..." required
             style="padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; transition: all 0.3s ease; background: rgba(255, 255, 255, 0.9); resize: vertical; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100px;"></textarea>
-        </div>
+        </div>  
+        -->
         
         <!-- Submit -->
         <button type="submit"

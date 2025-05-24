@@ -17,7 +17,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 import httpx
 from authlib.integrations.starlette_client import OAuth, OAuthError
 
-model = joblib.load('house_price_model.pkl')
+model, feature_names = joblib.load("home_price_model.pkl")
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 get_email = {}
 get_email_forget = {}
@@ -382,17 +382,17 @@ def get_form_data1(request: Request, Predict: PredictHouse = Depends(PredictHous
     print("hello predict", Predict.Purpose)
 
     data["TYPE"] = Predict.home
+    data["AREA"] = Predict.Size
     data["PURPOSE"] = Predict.Purpose
     data["LOCATION"] = Predict.Location
-    data["AREA"] = Predict.Size
-    data["PARKING SPACES"] = Predict.Parking
+    data["BUILD IN YEAR"] = Predict.Built_in_Year
     data["BEDROOMS"] = Predict.Bedrooms
     data["BATHROOMS"] = Predict.Washrooms
-    data["BUILD IN YEAR"] = Predict.Built_in_Year
-    if 'rent' in Predict.Purpose.lower():
-        data["is_rent"] = 1
-    else:
-        data["is_rent"] = 0
+    data["PARKING SPACES"] = Predict.Parking
+    # if 'rent' in Predict.Purpose.lower():
+    #     data["is_rent"] = 1
+    # else:
+    #     data["is_rent"] = 0
 
     new_data = pd.DataFrame([data])
     print(new_data)
