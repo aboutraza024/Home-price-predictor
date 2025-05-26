@@ -25,13 +25,15 @@ data = {}
 load_dotenv()
 github_client_id = os.getenv("github_client_id1")
 github_client_secret = os.getenv("github_client_secret1")
+google_client_id = os.getenv("gc_id")
+google_client_secret = os.getenv("gc_secret")
 
 oauth = OAuth()
 oauth.register(
     name="google",
     server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
-    client_id="610538991757-6i1rno8vnhac5d2bcl1a85om8b4h81a9.apps.googleusercontent.com",
-    client_secret="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",
+    client_id=google_client_id,
+    client_secret=google_client_secret,
     client_kwargs={
         'scope': 'openid profile email',
     },
