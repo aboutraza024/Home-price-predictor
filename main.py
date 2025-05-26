@@ -400,6 +400,8 @@ def get_form_data1(request: Request, Predict: PredictHouse = Depends(PredictHous
     print(new_data)
     print(data)
     predicted_price = model.predict(new_data)
+    predicted_price=round(predicted_price / 100000, 2)
+
     print(predicted_price)
     return templates.TemplateResponse("predict_page.html", {"request": request,"predicted_price":predicted_price})
 
